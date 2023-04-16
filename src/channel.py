@@ -19,6 +19,10 @@ class Channel:
         self.videoCount = channel["items"][0]["statistics"]["videoCount"]
         self.viewCount = channel["items"][0]["statistics"]["viewCount"]
 
+    @property
+    def channel_id(self):
+        return self.__channel_id
+
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         channel = Channel.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
@@ -32,5 +36,3 @@ class Channel:
         channel = Channel.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         with open(file_name, 'w') as f:
             json.dump(channel, f)
-
-
