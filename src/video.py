@@ -16,6 +16,14 @@ class Video:
                                                ).execute()
         # printj(video_response)
         self.video_title: str = video_response['items'][0]['snippet']['title']
+        self.url: str = 'https://www.youtube.com/watch?v=' + self.id_video
         self.view_count: int = video_response['items'][0]['statistics']['viewCount']
         self.like_count: int = video_response['items'][0]['statistics']['likeCount']
-        self.url: str = video_response['items'][0]['snippet']['url']
+
+
+
+
+
+class PLVideo(Video):
+    pass
+
