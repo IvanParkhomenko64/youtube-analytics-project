@@ -20,14 +20,13 @@ class Video:
         self.view_count: int = video_response['items'][0]['statistics']['viewCount']
         self.like_count: int = video_response['items'][0]['statistics']['likeCount']
 
+    def __str__(self):
+        return self.video_title
+
 
 class PLVideo(Video):
     def __init__(self, id_video, id_playlist) -> None:
         super().__init__(id_video)
         self.id_playlist = id_playlist
-        playlist_videos = self.youtube.playlistItems().list(playlistId=id_playlist,
-                                                       part='contentDetails',
-                                                       maxResults=50,
-                                                       ).execute()
-        self.video_id: str = playlist_videos['items'][0]['contentDetails']['videoId']
+
 
