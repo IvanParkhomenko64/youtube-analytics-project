@@ -1,19 +1,4 @@
-import json
-import os
-# необходимо установить через: pip install google-api-python-client
-from googleapiclient.discovery import build
-
 from src.video import Video, PLVideo
-
-api_key: str = os.getenv('YouTube-API')
-youtube = build('youtube', 'v3', developerKey=api_key)
-video_response = youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                       id='9lO06Zxhu88'
-                                       ).execute()
-playlist_videos = youtube.playlistItems().list(playlistId='PL7Ntiz7eTKwrqmApjln9u4ItzhDLRtPuD',
-                                               part='contentDetails',
-                                               maxResults=50,
-                                               ).execute()
 
 if __name__ == '__main__':
     # Создаем два экземпляра класса
@@ -21,5 +6,5 @@ if __name__ == '__main__':
     video2 = PLVideo('BBotskuyw_M', 'PL7Ntiz7eTKwrqmApjln9u4ItzhDLRtPuD')
     assert str(video1) == 'Как устроена IT-столица мира / Russian Silicon Valley (English subs)'
     assert str(video2) == 'Пушкин: наше все?'
-    # print(json.dumps(video_response, indent=2, ensure_ascii=False))
+
 
