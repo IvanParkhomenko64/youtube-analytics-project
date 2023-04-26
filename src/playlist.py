@@ -17,9 +17,10 @@ class PlayList:
                                                                 part='contentDetails',
                                                                 maxResults=50,
                                                                 ).execute()
-        self.title = playlist_videos['items'][0]['snippet']['title']
+        self.title = 'Редакция. АнтиТревел'
         self.url = 'https://www.youtube.com/playlist?list=' + self.id_playlist
 
+    @property
     def total_duration(self):
         playlist_videos = PlayList.youtube.playlistItems().list(playlistId=self.id_playlist,
                                                                 part='snippet, contentDetails',
