@@ -2,6 +2,7 @@ import json
 import os
 # необходимо установить через: pip install google-api-python-client
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 
 class Video:
@@ -11,14 +12,22 @@ class Video:
 
     def __init__(self, id_video):
         self.id_video = id_video
-        video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+        try:
+            self.youtube.captions().list(part="id",
+                                               video_ID=self.id_video
+                                               ).execute()
+        except HttpError as a:
+            print(a.status_code)
+            self.video_title = self.url = self.view_count = self.like_count = None
+        else:
+            video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                id=id_video
                                                ).execute()
         # printj(video_response)
-        self.video_title: str = video_response['items'][0]['snippet']['title']
-        self.url: str = 'https://www.youtube.com/watch?v=' + self.id_video
-        self.view_count: int = video_response['items'][0]['statistics']['viewCount']
-        self.like_count: int = video_response['items'][0]['statistics']['likeCount']
+            self.video_title: str = video_response['items'][0]['snippet']['title']
+            self.url: str = 'https://www.youtube.com/watch?v=' + self.id_video
+            self.view_count: int = video_response['items'][0]['statistics']['viewCount']
+            self.like_count: int = video_response['items'][0]['statistics']['likeCount']
 
     def __str__(self):
         return self.video_title
