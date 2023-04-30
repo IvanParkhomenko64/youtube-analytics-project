@@ -2,7 +2,13 @@ import json
 import os
 # необходимо установить через: pip install google-api-python-client
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+
+
+# from googleapiclient.errors import HttpError
+
+class HttpError(Exception):
+    def __init__(self, *args, **kwargs):
+        self.message = args[0] if args else 'Некорректный id'
 
 
 class Video:
@@ -13,17 +19,18 @@ class Video:
     def __init__(self, id_video):
         self.id_video = id_video
         try:
-            self.youtube.captions().list(part="id",
-                                               video_ID=self.id_video
-                                               ).execute()
-        except HttpError as a:
-            print(a.status_code)
+            video_response = Video.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                        id=id_video
+                                                        ).execute()
+            if not video_response['items']:  # проверка на пустой словарь
+                raise HttpError
+        except HttpError:
             self.video_title = self.url = self.view_count = self.like_count = None
         else:
-            video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                               id=id_video
-                                               ).execute()
-        # printj(video_response)
+            video_response = Video.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                        id=id_video
+                                                        ).execute()
+            # printj(video_response)
             self.video_title: str = video_response['items'][0]['snippet']['title']
             self.url: str = 'https://www.youtube.com/watch?v=' + self.id_video
             self.view_count: int = video_response['items'][0]['statistics']['viewCount']
@@ -37,5 +44,3 @@ class PLVideo(Video):
     def __init__(self, id_video, id_playlist) -> None:
         super().__init__(id_video)
         self.id_playlist = id_playlist
-
-
